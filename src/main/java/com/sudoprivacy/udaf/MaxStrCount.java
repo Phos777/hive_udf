@@ -131,8 +131,9 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
             MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
             Integer maxCount = 0;
             for (Map.Entry<String, Integer> entry : mapAggregationBuffer.map.entrySet()) {
-                if (UdfConvert.toInt(entry.getValue()) > maxCount) {
-                    maxCount = UdfConvert.toInt(entry.getValue());
+                Integer currCount = UdfConvert.toInt(entry.getValue());
+                if (currCount > maxCount) {
+                    maxCount = currCount;
                 }
             }
             return new IntWritable(maxCount);

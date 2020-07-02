@@ -131,11 +131,13 @@ public class MaxStr extends AbstractGenericUDAFResolver {
             Integer maxCount = 0;
             String maxStr = "";
             for (Map.Entry<String, Integer> entry : mapAggregationBuffer.map.entrySet()) {
-                if (UdfConvert.toInt(entry.getValue()) > maxCount) {
+                Integer currCount = UdfConvert.toInt(entry.getValue());
+                if (currCount > maxCount) {
+                    maxCount = currCount;
                     maxStr = entry.getKey();
                 }
             }
-            return new Text("Max str is : " + maxStr);
+            return new Text(maxStr);
         }
     }
 }
