@@ -18,11 +18,11 @@ import org.apache.hadoop.io.IntWritable;
 import java.util.*;
 
 @Description(
-        name = "max_list_cnt",
+        name = "max_cnt_list",
         value = "Return  count of the most frequent str in lists.",
         extended = "Example:\n > SELECT max_list_cnt(col) from table;"
 )
-public class MaxListCount extends AbstractGenericUDAFResolver {
+public class MaxCountList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
