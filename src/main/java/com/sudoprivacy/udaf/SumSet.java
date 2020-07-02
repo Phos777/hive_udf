@@ -18,11 +18,11 @@ import org.apache.hadoop.io.IntWritable;
 import java.util.*;
 
 @Description(
-        name = "sum_list",
-        value = "Return total sum of all str in lists.",
-        extended = "Example:\n > SELECT sum_list(col) from table;"
+        name = "sum_set",
+        value = "Return total sum of all str in sets.",
+        extended = "Example:\n > SELECT sum_set(col) from table;"
 )
-public class SumList extends AbstractGenericUDAFResolver {
+public class SumSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -107,8 +107,9 @@ public class SumList extends AbstractGenericUDAFResolver {
             Object o = objects[0];
             if (o != null && o instanceof LazyArray) {
                 LazyArray array = (LazyArray) o;
-                for (int i = 0; i < array.getListLength(); i++) {
-                    String key = array.getListElementObject(i).toString();
+                Set<Object> set = new HashSet<Object>(array.getList());
+                for (Object setObj : set) {
+                    String key = setObj.toString();
                     putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
                 }
             }

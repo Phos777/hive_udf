@@ -13,16 +13,16 @@ import org.apache.hadoop.hive.serde2.lazy.LazyArray;
 import org.apache.hadoop.hive.serde2.objectinspector.*;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 
 import java.util.*;
 
 @Description(
-        name = "sum_list",
-        value = "Return total sum of all str in lists.",
-        extended = "Example:\n > SELECT sum_list(col) from table;"
+        name = "max_set",
+        value = "Return the most requent str in sets.",
+        extended = "Example:\n > SELECT max_set(col) from table;"
 )
-public class SumList extends AbstractGenericUDAFResolver {
+public class MaxSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -57,9 +57,9 @@ public class SumList extends AbstractGenericUDAFResolver {
                 return ObjectInspectorFactory.getStandardMapObjectInspector(returnKey, returnValue);
             } else if (m == Mode.FINAL) {
                 combineOI = (StandardMapObjectInspector) parameters[0];
-                return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
+                return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
             } else if (m == Mode.COMPLETE) {
-                return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
+                return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
             } else {
                 throw new RuntimeException("No such mode");
             }
@@ -107,8 +107,9 @@ public class SumList extends AbstractGenericUDAFResolver {
             Object o = objects[0];
             if (o != null && o instanceof LazyArray) {
                 LazyArray array = (LazyArray) o;
-                for (int i = 0; i < array.getListLength(); i++) {
-                    String key = array.getListElementObject(i).toString();
+                Set<Object> set = new HashSet<Object>(array.getList());
+                for (Object setObj : set) {
+                    String key = setObj.toString();
                     putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
                 }
             }
@@ -129,11 +130,16 @@ public class SumList extends AbstractGenericUDAFResolver {
 
         public Object terminate(AggregationBuffer aggregationBuffer) throws HiveException {
             MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
-            Integer sum = 0;
+            Integer maxCount = 0;
+            String maxStr = "";
             for (Map.Entry<String, Integer> entry : mapAggregationBuffer.map.entrySet()) {
-                sum += UdfConvert.toInt(entry.getValue());
+                Integer currCount = UdfConvert.toInt(entry.getValue());
+                if (currCount > maxCount) {
+                    maxCount = currCount;
+                    maxStr = entry.getKey();
+                }
             }
-            return new IntWritable(sum);
+            return new Text(maxStr);
         }
     }
 }
