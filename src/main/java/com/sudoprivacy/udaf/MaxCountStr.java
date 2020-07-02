@@ -1,6 +1,7 @@
 package com.sudoprivacy.udaf;
 
 
+import com.sudoprivacy.udaf.common.MapStrCountEvaluator;
 import com.sudoprivacy.utils.UdfConvert;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
@@ -37,10 +38,8 @@ public class MaxCountStr extends AbstractGenericUDAFResolver {
     }
 
     @SuppressWarnings("deprecation")
-    public static class MaxStrEvaluator extends GenericUDAFEvaluator {
-
+    public static class MaxStrEvaluator extends MapStrCountEvaluator {
         private PrimitiveObjectInspector inputOI;
-        private StandardMapObjectInspector combineOI;
 
         @Override
         public ObjectInspector init(Mode m, ObjectInspector[] parameters) throws HiveException {
@@ -67,36 +66,6 @@ public class MaxCountStr extends AbstractGenericUDAFResolver {
             }
         }
 
-        static class MapAggregationBuffer implements AggregationBuffer {
-            Map<String, Integer> map;
-
-            void combine(Map<String, Integer> otherMap) throws HiveException {
-                if (null == otherMap || otherMap.isEmpty()) return;
-
-                for (Map.Entry<?, ?> entry : otherMap.entrySet()) {
-                    String key = UdfConvert.toStr(entry.getKey());
-                    Integer value = UdfConvert.toInt(entry.getValue());
-
-                    if (map.containsKey(key)) {
-                        map.put(key, map.get(key) + value);
-                    } else {
-                        map.put(key, value);
-                    }
-                }
-            }
-        }
-
-
-        public AggregationBuffer getNewAggregationBuffer() throws HiveException {
-            MapAggregationBuffer mapAggregationBuffer = new MapAggregationBuffer();
-            reset(mapAggregationBuffer);
-            return mapAggregationBuffer;
-        }
-
-        public void reset(AggregationBuffer aggregationBuffer) throws HiveException {
-            ((MapAggregationBuffer) aggregationBuffer).map = new HashMap<String, Integer>();
-        }
-
         public void putIntoMap(MapAggregationBuffer mapAggregationBuffer, String key) {
             if (mapAggregationBuffer.map.containsKey(key)) {
                 mapAggregationBuffer.map.put(key, mapAggregationBuffer.map.get(key) + 1);
@@ -111,19 +80,6 @@ public class MaxCountStr extends AbstractGenericUDAFResolver {
                 String key = PrimitiveObjectInspectorUtils.getString(o, inputOI);
                 putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
             }
-        }
-
-        public void merge(AggregationBuffer aggregationBuffer, Object partial) throws HiveException {
-            if (null != partial) {
-                MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
-                Map<String, Integer> partialMap = (Map<String, Integer>) combineOI.getMap(partial);
-                mapAggregationBuffer.combine(partialMap);
-            }
-        }
-
-        public Object terminatePartial(AggregationBuffer aggregationBuffer) throws HiveException {
-            MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
-            return mapAggregationBuffer.map;
         }
 
         public Object terminate(AggregationBuffer aggregationBuffer) throws HiveException {
