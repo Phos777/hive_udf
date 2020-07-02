@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- This hive release works with Hadoop 1.x.y, 2.x.y -->
-        <hive.version>1.2.2</hive.version>
+        <hive.version>2.3.4</hive.version>
         <hadoop.version>2.10.0</hadoop.version>
     </properties>
 
