@@ -1,8 +1,6 @@
 package com.sudoprivacy.udaf;
 
 
-import com.sudoprivacy.utils.UdfConvert;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -15,8 +13,6 @@ import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectIn
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.io.Text;
-
-import java.util.*;
 
 @Description(
         name = "any_str",
@@ -52,11 +48,6 @@ public class AnyStr extends AbstractGenericUDAFResolver {
 
         static class StrAggregationBuffer implements AggregationBuffer {
             String res;
-
-            void reduce(String otherStr) throws HiveException {
-                if (StringUtils.isEmpty(otherStr)) return;
-                res = otherStr;
-            }
         }
 
         public AggregationBuffer getNewAggregationBuffer() throws HiveException {

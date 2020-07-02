@@ -9,20 +9,20 @@ import org.apache.hadoop.hive.ql.parse.SemanticException;
 import org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
+import org.apache.hadoop.hive.serde2.lazy.LazyArray;
 import org.apache.hadoop.hive.serde2.objectinspector.*;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 
 import java.util.*;
 
 @Description(
-        name = "max_str_cnt",
-        value = "Return count of the most frequent str.",
-        extended = "Example:\n > SELECT max_str_count(col) from table;"
+        name = "max_list",
+        value = "Return the most requent str in lists.",
+        extended = "Example:\n > SELECT max_list(col) from table;"
 )
-public class MaxStrCount extends AbstractGenericUDAFResolver {
+public class MaxList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -39,7 +39,6 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
     @SuppressWarnings("deprecation")
     public static class MaxStrEvaluator extends GenericUDAFEvaluator {
 
-        private PrimitiveObjectInspector inputOI;
         private StandardMapObjectInspector combineOI;
 
         @Override
@@ -52,16 +51,15 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
                     .getPrimitiveJavaObjectInspector(PrimitiveObjectInspector.PrimitiveCategory.INT);
 
             if (m == Mode.PARTIAL1) {
-                inputOI = (PrimitiveObjectInspector) parameters[0];
                 return ObjectInspectorFactory.getStandardMapObjectInspector(returnKey, returnValue);
             } else if (m == Mode.PARTIAL2) {
                 combineOI = (StandardMapObjectInspector) parameters[0];
                 return ObjectInspectorFactory.getStandardMapObjectInspector(returnKey, returnValue);
             } else if (m == Mode.FINAL) {
                 combineOI = (StandardMapObjectInspector) parameters[0];
-                return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
+                return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
             } else if (m == Mode.COMPLETE) {
-                return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
+                return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
             } else {
                 throw new RuntimeException("No such mode");
             }
@@ -107,9 +105,12 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
 
         public void iterate(AggregationBuffer aggregationBuffer, Object[] objects) throws HiveException {
             Object o = objects[0];
-            if (o != null) {
-                String key = PrimitiveObjectInspectorUtils.getString(o, inputOI);
-                putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
+            if (o != null && o instanceof LazyArray) {
+                LazyArray array = (LazyArray) o;
+                for (int i = 0; i < array.getListLength(); i++) {
+                    String key = array.getListElementObject(i).toString();
+                    putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
+                }
             }
         }
 
@@ -129,13 +130,15 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
         public Object terminate(AggregationBuffer aggregationBuffer) throws HiveException {
             MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
             Integer maxCount = 0;
+            String maxStr = "";
             for (Map.Entry<String, Integer> entry : mapAggregationBuffer.map.entrySet()) {
                 Integer currCount = UdfConvert.toInt(entry.getValue());
                 if (currCount > maxCount) {
                     maxCount = currCount;
+                    maxStr = entry.getKey();
                 }
             }
-            return new IntWritable(maxCount);
+            return new Text(maxStr);
         }
     }
 }

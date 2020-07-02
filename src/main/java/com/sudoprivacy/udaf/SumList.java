@@ -9,20 +9,20 @@ import org.apache.hadoop.hive.ql.parse.SemanticException;
 import org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
+import org.apache.hadoop.hive.serde2.lazy.LazyArray;
 import org.apache.hadoop.hive.serde2.objectinspector.*;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.io.IntWritable;
 
 import java.util.*;
 
 @Description(
-        name = "max_str_cnt",
-        value = "Return count of the most frequent str.",
-        extended = "Example:\n > SELECT max_str_count(col) from table;"
+        name = "sum_list",
+        value = "Return total sum of all list elements.",
+        extended = "Example:\n > SELECT sum_list(col) from table;"
 )
-public class MaxStrCount extends AbstractGenericUDAFResolver {
+public class SumList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -39,7 +39,6 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
     @SuppressWarnings("deprecation")
     public static class MaxStrEvaluator extends GenericUDAFEvaluator {
 
-        private PrimitiveObjectInspector inputOI;
         private StandardMapObjectInspector combineOI;
 
         @Override
@@ -52,7 +51,6 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
                     .getPrimitiveJavaObjectInspector(PrimitiveObjectInspector.PrimitiveCategory.INT);
 
             if (m == Mode.PARTIAL1) {
-                inputOI = (PrimitiveObjectInspector) parameters[0];
                 return ObjectInspectorFactory.getStandardMapObjectInspector(returnKey, returnValue);
             } else if (m == Mode.PARTIAL2) {
                 combineOI = (StandardMapObjectInspector) parameters[0];
@@ -107,9 +105,12 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
 
         public void iterate(AggregationBuffer aggregationBuffer, Object[] objects) throws HiveException {
             Object o = objects[0];
-            if (o != null) {
-                String key = PrimitiveObjectInspectorUtils.getString(o, inputOI);
-                putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
+            if (o != null && o instanceof LazyArray) {
+                LazyArray array = (LazyArray) o;
+                for (int i = 0; i < array.getListLength(); i++) {
+                    String key = array.getListElementObject(i).toString();
+                    putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
+                }
             }
         }
 
@@ -128,14 +129,11 @@ public class MaxStrCount extends AbstractGenericUDAFResolver {
 
         public Object terminate(AggregationBuffer aggregationBuffer) throws HiveException {
             MapAggregationBuffer mapAggregationBuffer = (MapAggregationBuffer) aggregationBuffer;
-            Integer maxCount = 0;
+            Integer sum = 0;
             for (Map.Entry<String, Integer> entry : mapAggregationBuffer.map.entrySet()) {
-                Integer currCount = UdfConvert.toInt(entry.getValue());
-                if (currCount > maxCount) {
-                    maxCount = currCount;
-                }
+                sum += UdfConvert.toInt(entry.getValue());
             }
-            return new IntWritable(maxCount);
+            return new IntWritable(sum);
         }
     }
 }
