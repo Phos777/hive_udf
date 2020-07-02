@@ -19,7 +19,7 @@ public class MapStrCountEvaluator extends GenericUDAFEvaluator {
             if (null == otherMap || otherMap.isEmpty()) return;
 
             for (Map.Entry<?, ?> entry : otherMap.entrySet()) {
-                String key = UdfConvert.toStr(entry.getKey());
+                String key = entry.getKey().toString();
                 Integer value = UdfConvert.toInt(entry.getValue());
 
                 if (map.containsKey(key)) {

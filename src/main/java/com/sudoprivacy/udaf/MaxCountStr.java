@@ -77,8 +77,7 @@ public class MaxCountStr extends AbstractGenericUDAFResolver {
         public void iterate(AggregationBuffer aggregationBuffer, Object[] objects) throws HiveException {
             Object o = objects[0];
             if (o != null) {
-                String key = PrimitiveObjectInspectorUtils.getString(o, inputOI);
-                putIntoMap((MapAggregationBuffer) aggregationBuffer, key);
+                putIntoMap((MapAggregationBuffer) aggregationBuffer, o.toString());
             }
         }
 
