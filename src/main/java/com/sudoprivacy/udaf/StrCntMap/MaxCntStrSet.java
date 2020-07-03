@@ -1,10 +1,9 @@
-package com.sudoprivacy.udaf.StrCountMap;
+package com.sudoprivacy.udaf.StrCntMap;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
-import com.sudoprivacy.udaf.StrCountMap.MapStrCountEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -15,11 +14,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_str",
-        value = "Return the most frequent str.",
-        extended = "Example:\n > SELECT max_str(col) from table;"
+        name = "max_cnt_strset",
+        value = "Return  count of the most frequent str in sets.",
+        extended = "Example:\n > SELECT max_cnt_set(col) from table;"
 )
-public class MaxStr extends AbstractGenericUDAFResolver {
+public class MaxCntStrSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -34,21 +33,21 @@ public class MaxStr extends AbstractGenericUDAFResolver {
     }
 
     @SuppressWarnings("deprecation")
-    public static class MaxStrEvaluator extends MapStrCountEvaluator {
+    public static class MaxStrEvaluator extends BaseStrCntMapEvaluator {
 
         @Override
         protected UdfDataType InputType() throws HiveException {
-            return UdfDataType.Str;
+            return UdfDataType.ListAsStr;
         }
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapMax;
+            return UdfOuputType.MapMaxCount;
         }
 
         @Override
         protected UdfProcesType ProcessType() throws HiveException {
-            return UdfProcesType.List;
+            return UdfProcesType.Set;
         }
     }
 }

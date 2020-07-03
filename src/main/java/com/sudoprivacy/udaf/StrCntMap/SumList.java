@@ -1,10 +1,9 @@
-package com.sudoprivacy.udaf.StrCountMap;
+package com.sudoprivacy.udaf.StrCntMap;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
-import com.sudoprivacy.udaf.StrCountMap.MapStrCountEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -34,7 +33,7 @@ public class SumList extends AbstractGenericUDAFResolver {
     }
 
     @SuppressWarnings("deprecation")
-    public static class MaxStrEvaluator extends MapStrCountEvaluator {
+    public static class MaxStrEvaluator extends BaseStrCntMapEvaluator {
 
         @Override
         protected UdfDataType InputType() throws HiveException {

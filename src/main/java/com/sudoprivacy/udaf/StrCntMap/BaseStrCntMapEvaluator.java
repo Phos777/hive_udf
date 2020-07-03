@@ -1,4 +1,4 @@
-package com.sudoprivacy.udaf.StrCountMap;
+package com.sudoprivacy.udaf.StrCntMap;
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
@@ -19,7 +19,7 @@ import org.apache.hadoop.io.Text;
 import java.util.*;
 
 @SuppressWarnings("deprecation")
-public class MapStrCountEvaluator extends GenericUDAFEvaluator {
+public class BaseStrCntMapEvaluator extends GenericUDAFEvaluator {
     protected PrimitiveObjectInspector inputOI;
     protected StandardMapObjectInspector combineOI;
 
