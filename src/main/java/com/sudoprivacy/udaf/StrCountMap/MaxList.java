@@ -1,10 +1,10 @@
-package com.sudoprivacy.udaf;
+package com.sudoprivacy.udaf.StrCountMap;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
-import com.sudoprivacy.udaf.common.MapStrCountEvaluator;
+import com.sudoprivacy.udaf.StrCountMap.MapStrCountEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -15,11 +15,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "sum_set",
-        value = "Return total sum of all str in sets.",
-        extended = "Example:\n > SELECT sum_set(col) from table;"
+        name = "max_list",
+        value = "Return the most requent str in lists.",
+        extended = "Example:\n > SELECT max_list(col) from table;"
 )
-public class SumSet extends AbstractGenericUDAFResolver {
+public class MaxList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -43,12 +43,12 @@ public class SumSet extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapSum;
+            return UdfOuputType.MapMax;
         }
 
         @Override
         protected UdfProcesType ProcessType() throws HiveException {
-            return UdfProcesType.Set;
+            return UdfProcesType.List;
         }
     }
 }

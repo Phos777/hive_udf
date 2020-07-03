@@ -1,4 +1,4 @@
-package com.sudoprivacy.udaf.common;
+package com.sudoprivacy.udaf.StrCountMap;
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;

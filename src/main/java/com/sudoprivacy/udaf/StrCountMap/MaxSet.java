@@ -1,10 +1,10 @@
-package com.sudoprivacy.udaf;
+package com.sudoprivacy.udaf.StrCountMap;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
-import com.sudoprivacy.udaf.common.MapStrCountEvaluator;
+import com.sudoprivacy.udaf.StrCountMap.MapStrCountEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -15,11 +15,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_cnt_list",
-        value = "Return  count of the most frequent str in lists.",
-        extended = "Example:\n > SELECT max_list_cnt(col) from table;"
+        name = "max_set",
+        value = "Return the most requent str in sets.",
+        extended = "Example:\n > SELECT max_set(col) from table;"
 )
-public class MaxCountList extends AbstractGenericUDAFResolver {
+public class MaxSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -43,12 +43,12 @@ public class MaxCountList extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapMaxCount;
+            return UdfOuputType.MapMax;
         }
 
         @Override
         protected UdfProcesType ProcessType() throws HiveException {
-            return UdfProcesType.List;
+            return UdfProcesType.Set;
         }
     }
 }

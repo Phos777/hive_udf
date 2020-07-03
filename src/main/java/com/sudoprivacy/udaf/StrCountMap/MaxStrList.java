@@ -1,10 +1,10 @@
-package com.sudoprivacy.udaf;
+package com.sudoprivacy.udaf.StrCountMap;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
-import com.sudoprivacy.udaf.common.MapStrCountEvaluator;
+import com.sudoprivacy.udaf.StrCountMap.MapStrCountEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -15,11 +15,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_list",
-        value = "Return the most requent str in lists.",
-        extended = "Example:\n > SELECT max_list(col) from table;"
+        name = "max_strlist",
+        value = "Return the most requent str in str lists.",
+        extended = "Example:\n > SELECT max_strlist(col) from table;"
 )
-public class MaxList extends AbstractGenericUDAFResolver {
+public class MaxStrList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -38,7 +38,7 @@ public class MaxList extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfDataType InputType() throws HiveException {
-            return UdfDataType.ListOfStr;
+            return UdfDataType.ListAsStr;
         }
 
         @Override

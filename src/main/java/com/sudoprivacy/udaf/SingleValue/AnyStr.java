@@ -1,4 +1,4 @@
-package com.sudoprivacy.udaf;
+package com.sudoprivacy.udaf.SingleValue;
 
 
 import org.apache.hadoop.hive.ql.exec.Description;
