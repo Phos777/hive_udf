@@ -14,7 +14,7 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_cnt_str",
+        name = "maxcnt_str",
         value = "Return count of the most frequent str.",
         extended = "Example:\n > SELECT max_str_count(col) from table;"
 )

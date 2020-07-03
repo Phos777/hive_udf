@@ -15,7 +15,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
         name = "sum_strlist",
-        value = "Return total sum of all str in str lists.",
+        value = "Return total sum of all str in lists as str format.",
         extended = "Example:\n > SELECT sum_str_list(col) from table;"
 )
 public class SumStrList extends AbstractGenericUDAFResolver {

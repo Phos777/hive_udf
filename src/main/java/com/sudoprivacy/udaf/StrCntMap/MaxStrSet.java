@@ -15,7 +15,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
         name = "max_strset",
-        value = "Return the most requent str in str sets.",
+        value = "Return the most requent str in sets as str format.",
         extended = "Example:\n > SELECT max_strset(col) from table;"
 )
 public class MaxStrSet extends AbstractGenericUDAFResolver {

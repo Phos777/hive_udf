@@ -15,7 +15,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
         name = "sum_strset",
-        value = "Return total sum of all str in str sets.",
+        value = "Return total sum of all str in sets as str format.",
         extended = "Example:\n > SELECT sum_str_set(col) from table;"
 )
 public class SumStrSet extends AbstractGenericUDAFResolver {

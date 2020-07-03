@@ -14,9 +14,9 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_cnt_strset",
-        value = "Return  count of the most frequent str in sets.",
-        extended = "Example:\n > SELECT max_cnt_set(col) from table;"
+        name = "maxcnt_strset",
+        value = "Return count of the most frequent str in sets as str format.",
+        extended = "Example:\n > SELECT maxcnt_set(col) from table;"
 )
 public class MaxCntStrSet extends AbstractGenericUDAFResolver {
     @Override

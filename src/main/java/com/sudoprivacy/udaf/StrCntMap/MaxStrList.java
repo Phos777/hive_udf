@@ -15,7 +15,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
         name = "max_strlist",
-        value = "Return the most requent str in str lists.",
+        value = "Return the most requent str in lists as str format.",
         extended = "Example:\n > SELECT max_strlist(col) from table;"
 )
 public class MaxStrList extends AbstractGenericUDAFResolver {
