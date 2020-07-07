@@ -42,7 +42,7 @@ public class MaxCntStr extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapMax;
+            return UdfOuputType.MapMaxCount;
         }
 
         @Override

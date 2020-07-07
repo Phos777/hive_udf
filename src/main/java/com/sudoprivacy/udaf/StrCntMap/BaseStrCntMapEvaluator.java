@@ -121,9 +121,16 @@ public class BaseStrCntMapEvaluator extends GenericUDAFEvaluator {
         if (UdfDataType.Str == InputType()) {
             keys.add(o.toString());
         } else if (UdfDataType.ListOfStr == InputType()) {
-            LazyArray array = (LazyArray) o;
-            for (int i = 0; i < array.getListLength(); i++) {
-                keys.add(array.getListElementObject(i).toString());
+            if (o instanceof LazyArray) {
+                LazyArray array = (LazyArray) o;
+                for (int i = 0; i < array.getListLength(); i++) {
+                    keys.add(array.getListElementObject(i).toString());
+                }
+            } else {
+                List<Object> array = (ArrayList<Object>) o;
+                for (int i = 0; i < array.size(); i++) {
+                    keys.add(array.get(i).toString());
+                }
             }
         } else if (UdfDataType.ListAsStr == InputType()) {
             keys = Arrays.asList(PrimitiveObjectInspectorUtils.getString(o, inputOI).split(","));
@@ -172,7 +179,7 @@ public class BaseStrCntMapEvaluator extends GenericUDAFEvaluator {
                 maxCount = currCount;
                 maxStr = entry.getKey();
             }
-            sum += UdfConvert.toInt(entry.getValue());
+            sum += currCount;
         }
 
         switch (OutputType()) {
