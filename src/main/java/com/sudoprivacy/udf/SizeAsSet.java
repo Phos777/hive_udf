@@ -12,7 +12,9 @@ import java.util.HashSet;
 @Description(
         name = "size_as_set",
         value = "Parse str as list and get its unique elements count.",
-        extended = "Example:\n > SELECT size_as_set(col) from table;"
+        extended = "Example:\n " +
+                "> SELECT size_as_set(\"a,a,b\");\n" +
+                "2"
 )
 public class SizeAsSet extends UDF {
 

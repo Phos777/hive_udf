@@ -9,7 +9,9 @@ import org.apache.hadoop.io.Text;
 @Description(
         name = "size_as_list",
         value = "Parse str as list and get its size.",
-        extended = "Example:\n > SELECT size_as_list(col) from table;"
+        extended = "Example:\n " +
+                "> SELECT size_as_list(\"a,a,b\");\n" +
+                "3"
 )
 public class SizeAsList extends UDF {
 
