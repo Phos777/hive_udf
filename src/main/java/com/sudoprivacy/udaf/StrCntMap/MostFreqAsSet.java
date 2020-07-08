@@ -14,11 +14,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "maxcnt_strlist",
-        value = "Return count of the most frequent str in lists as str format.",
-        extended = "Example:\n > SELECT maxcnt_strlist(col) from table;"
+        name = "most_freq_as_set",
+        value = "Return the most requent str in sets as str format.",
+        extended = "Example:\n > SELECT most_freq_as_set(col) from table;"
 )
-public class MaxCntStrList extends AbstractGenericUDAFResolver {
+public class MostFreqAsSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -42,12 +42,12 @@ public class MaxCntStrList extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapMaxCount;
+            return UdfOuputType.MapMax;
         }
 
         @Override
         protected UdfProcesType ProcessType() throws HiveException {
-            return UdfProcesType.List;
+            return UdfProcesType.Set;
         }
     }
 }

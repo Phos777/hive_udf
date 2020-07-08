@@ -1,9 +1,10 @@
-package com.sudoprivacy.udaf.StrCntMap;
+package com.sudoprivacy.udaf.StrCntMap.Abandoned;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
+import com.sudoprivacy.udaf.StrCntMap.BaseStrCntMapEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;

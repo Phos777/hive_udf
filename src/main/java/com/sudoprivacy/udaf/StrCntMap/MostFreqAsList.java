@@ -14,11 +14,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "sum_set",
-        value = "Return total sum of all str in sets as str format.",
-        extended = "Example:\n > SELECT sum_set(col) from table;"
+        name = "most_freq_as_list",
+        value = "Return the most frequent str in lists as str format.",
+        extended = "Example:\n > SELECT most_freq_as_list(col) from table;"
 )
-public class SumSet extends AbstractGenericUDAFResolver {
+public class MostFreqAsList extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -37,17 +37,17 @@ public class SumSet extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfDataType InputType() throws HiveException {
-            return UdfDataType.ListOfStr;
+            return UdfDataType.ListAsStr;
         }
 
         @Override
         protected UdfOuputType OutputType() throws HiveException {
-            return UdfOuputType.MapSum;
+            return UdfOuputType.MapMax;
         }
 
         @Override
         protected UdfProcesType ProcessType() throws HiveException {
-            return UdfProcesType.Set;
+            return UdfProcesType.List;
         }
     }
 }

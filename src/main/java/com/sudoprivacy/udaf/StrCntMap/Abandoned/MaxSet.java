@@ -1,9 +1,10 @@
-package com.sudoprivacy.udaf.StrCntMap;
+package com.sudoprivacy.udaf.StrCntMap.Abandoned;
 
 
 import com.sudoprivacy.enums.UdfDataType;
 import com.sudoprivacy.enums.UdfOuputType;
 import com.sudoprivacy.enums.UdfProcesType;
+import com.sudoprivacy.udaf.StrCntMap.BaseStrCntMapEvaluator;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -14,11 +15,11 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 @Description(
-        name = "max_strset",
+        name = "max_set",
         value = "Return the most requent str in sets as str format.",
-        extended = "Example:\n > SELECT max_strset(col) from table;"
+        extended = "Example:\n > SELECT max_set(col) from table;"
 )
-public class MaxStrSet extends AbstractGenericUDAFResolver {
+public class MaxSet extends AbstractGenericUDAFResolver {
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info) throws SemanticException {
         return new MaxStrEvaluator();
@@ -37,7 +38,7 @@ public class MaxStrSet extends AbstractGenericUDAFResolver {
 
         @Override
         protected UdfDataType InputType() throws HiveException {
-            return UdfDataType.ListAsStr;
+            return UdfDataType.ListOfStr;
         }
 
         @Override
