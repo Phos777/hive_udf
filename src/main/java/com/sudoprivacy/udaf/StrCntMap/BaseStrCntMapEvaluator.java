@@ -52,12 +52,12 @@ public class BaseStrCntMapEvaluator extends GenericUDAFEvaluator {
     }
 
     private ObjectInspector createOutputInspector() throws HiveException {
-        if (UdfOuputType.MapMaxCount == OutputType() || UdfOuputType.MapSum == OutputType()) {
+        if (UdfOuputType.MapMaxCount == OutputType() || UdfOuputType.MapSum == OutputType() || UdfOuputType.MapCount == OutputType()) {
             return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
         } else if (UdfOuputType.MapMax == OutputType()) {
             return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
         } else {
-            throw new HiveException(String.format("Not supported output type: {}", OutputType().toString()));
+            throw new HiveException(String.format("Not supported output type: %s", OutputType().toString()));
         }
     }
 
@@ -189,6 +189,8 @@ public class BaseStrCntMapEvaluator extends GenericUDAFEvaluator {
                 return new IntWritable(maxCount);
             case MapSum:
                 return new IntWritable(sum);
+            case MapCount:
+                return new IntWritable(mapAggregationBuffer.map.entrySet().size());
             default:
                 throw new HiveException(String.format("Unsupported output type: {}", OutputType()));
         }
